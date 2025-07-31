@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handshake Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .result h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .result p {
+            color: #667eea;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .formula {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .handshake-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: shake 2s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(20deg); }
+            75% { transform: rotate(-20deg); }
+        }
+
+        .people-display {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            min-height: 60px;
+            align-items: center;
+        }
+
+        .person {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            animation: popIn 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .line {
+            position: absolute;
+            height: 2px;
+            background: #667eea;
+            opacity: 0.3;
+            transform-origin: left center;
+            animation: drawLine 0.5s ease;
+        }
+
+        @keyframes drawLine {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            input[type="number"], .calculate-btn {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="handshake-icon">🤝</div>
+        <h1>Handshake Calculator</h1>
+        
+        <div class="input-group">
+            <label for="people">Number of People in Room</label>
+            <input type="number" id="people" min="2" max="20" placeholder="Enter number" value="2">
+        </div>
+
+        <button class="calculate-btn" onclick="calculateHandshakes()">Calculate Handshakes</button>
+
+        <div class="result" id="result">
+            <h2>Total Handshakes</h2>
+            <p id="handshakeCount">1</p>
+            <div class="formula">Formula: n × (n - 1) / 2</div>
+            <div class="people-display" id="peopleDisplay"></div>
+        </div>
+    </div>
+
+    <script>
+        function calculateHandshakes() {
+            const people = parseInt(document.getElementById('people').value);
+            
+            if (isNaN(people) || people < 2) {
+                alert('Please enter a valid number of people (minimum 2)');
+                return;
+            }
+
+            const handshakes = (people * (people - 1)) / 2;
+            
+            document.getElementById('handshakeCount').textContent = handshakes;
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.add('show');
+            
+            displayPeople(people);
+        }
+
+        function displayPeople(count) {
+            const container = document.getElementById('peopleDisplay');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= count; i++) {
+                const person = document.createElement('div');
+                person.className = 'person';
+                person.textContent = i;
+                person.style.animationDelay = `${i * 0.1}s`;
+                container.appendChild(person);
+            }
+        }
+
+        // Initialize with 2 people
+        calculateHandshakes();
+
+        // Allow Enter key to calculate
+        document.getElementById('people').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateHandshakes();
+            }
+        });
+    </script>
+</body>
+</html>
